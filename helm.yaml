@@ -8,7 +8,7 @@ tasks:
       - cmd: |
           #!/bin/bash
           echo "Create service-account for tiller"
-          KUBECONFIG={{.KUBECONFIG_FILE}} kubectl apply -f helm/rbac-tiller.yaml
+          KUBECONFIG={{.KUBECONFIG_FILE}} kubectl apply -f taskfiles/helm/rbac-tiller.yaml
 
           echo "Init helm"
           KUBECONFIG={{.KUBECONFIG_FILE}} helm init --service-account tiller --history-max 20
