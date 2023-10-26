@@ -1,0 +1,10 @@
+version: '3'
+
+env:
+  AWS_PROFILE: "{{.AWS_PROFILE}}"
+
+tasks:
+  sso:login:
+    desc: "Retrieve an AWS SSO access token to exchange for AWS credentials"
+    cmds:
+      - aws sso login --profile ${AWS_PROFILE}
