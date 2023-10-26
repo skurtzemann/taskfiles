@@ -1,0 +1,54 @@
+version: '3'
+
+vars:
+  # System
+  HOME: {sh: echo $HOME}
+  # VM configuration
+  VM_NAME: "lima-tpl-box"
+  VM_TEMPLATE: "template://k3s"
+  VM_CPUS: 2
+  VM_MEM: "2GiB"
+  
+tasks:
+  create:
+    silent: true
+    desc: Create a Lima box
+    cmds:
+    - |
+        echo "Creating Lima box {{.VM_NAME}} with {{.VM_TEMPLATE}}..."
+        echo "• CPUs  : {{.VM_CPUS}}"
+        echo "• Memory: {{.VM_MEM}}"
+    - limactl start --tty=false --name={{.VM_NAME}} --set='.cpus = {{.VM_CPUS}} | .memory = "{{.VM_MEM}}"' {{.VM_TEMPLATE}}
+
+  start:
+    silent: true
+    desc: Start the Lima box
+    cmds:
+    - |
+        echo "Creating Lima box {{.VM_NAME}} with {{.VM_TEMPLATE}}..."
+        echo "• CPUs  : {{.VM_CPUS}}"
+        echo "• Memory: {{.VM_MEM}}"
+    - limactl start {{.VM_NAME}}
+
+  stop:
+    silent: true
+    desc: Halt the Lima box
+    cmds:
+      - limactl stop {{.VM_NAME}}
+
+  enter:
+    silent: true
+    desc: Shell into the Lima box
+    cmds:
+      - limactl shell {{.VM_NAME}}
+
+  kubeconfig:
+    desc: Create symlink to generated Lima kubeconfig
+    cmds:
+    - KUBECONFIG={{.LIMA_KUBECONFIG}} kubectl config rename-context default {{.KUBE_CTX}}
+    - ln -s {{.LIMA_KUBECONFIG}} {{.KUBIE_KUBECONFIG}}
+    - kubie ctx {{.KUBE_CTX}}
+    vars:
+      KUBE_CTX: "lima-{{.VM_NAME}}"
+      LIMA_KUBECONFIG: "{{.HOME}}/.lima/{{.VM_NAME}}/copied-from-guest/kubeconfig.yaml"
+      KUBIE_KUBECONFIG: "~/.kube/kubie/{{.KUBE_CTX}}.yaml"
