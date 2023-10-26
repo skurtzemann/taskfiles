@@ -24,10 +24,6 @@ tasks:
     silent: true
     desc: Start the Lima box
     cmds:
-    - |
-        echo "Creating Lima box {{.VM_NAME}} with {{.VM_TEMPLATE}}..."
-        echo "• CPUs  : {{.VM_CPUS}}"
-        echo "• Memory: {{.VM_MEM}}"
     - limactl start {{.VM_NAME}}
 
   stop:
