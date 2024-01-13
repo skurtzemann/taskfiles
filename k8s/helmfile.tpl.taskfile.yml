@@ -1,0 +1,13 @@
+version: '3'
+  
+tasks:
+  plan:
+    desc: Plan helmfile resources
+    cmds:
+    - helmfile diff
+
+  apply:
+    desc: Apply helmfile resources
+    cmds:
+    - helmfile apply
+  
